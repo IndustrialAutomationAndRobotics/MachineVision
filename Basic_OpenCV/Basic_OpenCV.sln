@@ -11,6 +11,10 @@ Project("{888888A0-9F3D-457C-B088-3A5042F75D52}") = "captureVideoFromCamera", "c
 EndProject
 Project("{888888A0-9F3D-457C-B088-3A5042F75D52}") = "playVideo", "playVideo\playVideo.pyproj", "{053FE1B8-DDAE-4663-A218-2FA3FEBA59B7}"
 EndProject
+Project("{888888A0-9F3D-457C-B088-3A5042F75D52}") = "ImagesSubtraction", "ImagesSubtraction\ImagesSubtraction.pyproj", "{1E68E644-528B-474E-8E47-C7A2F0D0491F}"
+EndProject
+Project("{888888A0-9F3D-457C-B088-3A5042F75D52}") = "getFrame", "getFrame\getFrame.pyproj", "{E5EDFA42-777C-4104-A1A8-99BA5E88B122}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -25,6 +29,10 @@ Global
 		{9D6D3BD2-7CDC-424A-BC40-78C32A0300D7}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{053FE1B8-DDAE-4663-A218-2FA3FEBA59B7}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{053FE1B8-DDAE-4663-A218-2FA3FEBA59B7}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{1E68E644-528B-474E-8E47-C7A2F0D0491F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{1E68E644-528B-474E-8E47-C7A2F0D0491F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{E5EDFA42-777C-4104-A1A8-99BA5E88B122}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{E5EDFA42-777C-4104-A1A8-99BA5E88B122}.Release|Any CPU.ActiveCfg = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

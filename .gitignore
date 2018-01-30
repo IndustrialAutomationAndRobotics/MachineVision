@@ -7,6 +7,10 @@
 *.userosscache
 *.sln.docstates
 
+## Ignore visual studio code workspace settings
+.vscode/
+*.json
+
 # User-specific files (MonoDevelop/Xamarin Studio)
 *.userprefs
 

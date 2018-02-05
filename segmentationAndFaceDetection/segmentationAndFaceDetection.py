@@ -58,6 +58,7 @@ if frame1 is None and frame2 is None:
     print("error: image not read")
     cv2.waitKey(0)
 
+
 # Removing noise from frame
 img1Denoise = denoise(frame1)
 img2Denoise = denoise(frame2)

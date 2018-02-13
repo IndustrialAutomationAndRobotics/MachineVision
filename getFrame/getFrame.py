@@ -8,7 +8,7 @@ import os
 # Enter the absolute path where you want to create
 # the folder, if you copy the path from windows
 # change the slashes from \ to /
-path = 'D:/invader/Documents/py/Sample/getFrame/frame'
+path = 'D:/invader/Documents/py/MachineVision/getFrame/frame/zakwan'
 
 # Creating the directory, the exist_ok is change to true
 # so that this line will not give error if the directory
@@ -19,7 +19,7 @@ os.makedirs(path, exist_ok=True)
 count = 1
 
 # get vedio from our webcam or pass in video files
-cap = cv2.VideoCapture(0)
+cap = cv2.VideoCapture('D:/invader/Documents/py/MachineVision/sample/background1/zakwan.mp4')
 
 # check wether the webcam can be accessed or not
 if cap.isOpened() == False:

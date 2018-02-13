@@ -26,7 +26,7 @@ class BackGroundSubtractor:
         return cv2.absdiff(self.backGroundModel.astype(np.uint8),frame)
 
 # get the video. Change the parameter to use a webcam
-cam = cv2.VideoCapture('E:/Parasite/Documents/py/MachineVision/sample/vid.avi')
+cam = cv2.VideoCapture('D:/invader/Documents/py/MachineVision/sample/background1/mael.mp4')
 
 # check if the video is successfully read
 if cam.isOpened() == False:
@@ -65,9 +65,10 @@ while(run):
 
         # get the foreground
         foreGround = backSubtractor.getForeground(denoise(frame))
+        cv2.imshow('foreGround', foreGround)
 
         # Apply thresholding on the background and display the resulting mask
-        ret, mask = cv2.threshold(foreGround, 15, 255, cv2.THRESH_BINARY)
+        ret, mask = cv2.threshold(foreGround, 10, 255, cv2.THRESH_BINARY)
 
         cv2.imshow('mask', mask)
 

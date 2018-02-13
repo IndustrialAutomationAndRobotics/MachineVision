@@ -5,12 +5,12 @@ import os
 
 # Change all this path corresponds to your device path
 # The path where we save the frame
-path = 'E:/Parasite/Documents/py/Sample/getFrame/frame'
+path = 'D:/invader/Documents/py/MachineVision/getFrame/frame'
 # Create a directory to save the output file
-savePath = 'E:/Parasite/Documents/py/MachineVision/segmentationAndFaceDetection/output'
+savePath = 'D:/invader/Documents/py/MachineVision/segmentationAndFaceDetection/output/zakwan'
 # The path to the haar_cascade xml files
 # Resource from https://github.com/prateekvjoshi/Body-Parts-Detection/blob/master/detectBodyParts.cpp
-haar_cascade_path = 'E:/Parasite/Documents/py/MachineVision/segmentationAndFaceDetection/CascadeFiles'
+haar_cascade_path = 'D:/invader/Documents/py/MachineVision/segmentationAndFaceDetection/CascadeFiles'
 
 # Load the face cascade files
 # This haar cascade files will be use to detect face
@@ -50,8 +50,8 @@ def fillHole(frame):
 
 # Read two file, the first one is the background
 # the second one is the background with and object
-frame1 = cv2.imread(path + '/kosong28.png')
-frame2 = cv2.imread(path + '/nuri65.png')
+frame1 = cv2.imread(path + '/kosong/frame1.png')
+frame2 = cv2.imread(path + '/zakwan/frame16.png')
 
 # check if image is read successfully
 if frame1 is None and frame2 is None:
@@ -118,6 +118,8 @@ print("Found {0} faces!".format(len(faces)))
 for (x,y,w,h) in faces:
     cv2.rectangle(imgROIGray, (x,y), (x+w, y+h), (255,255,255),2)
 
+# Save the face
+theFace = imgROI[y:y+h, x:x+w]
 # Show the the images
 #cv2.imshow('kosong', frame1)
 #cv2.imshow('nuri', frame2)
@@ -132,6 +134,7 @@ cv2.imwrite(savePath + "/threshold.png",imgThresh)
 cv2.imwrite(savePath + "/MorphologicalTransformation.png",imgStrel)
 cv2.imwrite(savePath + "/boundingBox.png",im)
 cv2.imwrite(savePath + "/Face.png",imgROIGray)
+cv2.imwrite(savePath + "/theFace.png", theFace)
 
 cv2.waitKey(0)
 

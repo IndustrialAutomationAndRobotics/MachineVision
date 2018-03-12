@@ -1,6 +1,6 @@
 
 % Read the input vedio and get only the first frame
-vidInput = VideoReader('C:\Users\lab E211\Desktop\circle.mov');
+vidInput = VideoReader('E:\Parasite\Documents\py\MachineVision\circle.mov');
 images = read(vidInput, 1);
 
 % Show it and change it to grayscale for segmentation method
@@ -33,10 +33,12 @@ BWnobord = imclearborder(BWdfill, 4);
 % We erode it back to get back the actual size and remove some noise
 seD = strel('diamond', 1);
 BWfinal = imerode(BWnobord,seD);
-figure, imshow(BWfinal), title('segmented image');
+%figure, imshow(BWfinal), title('segmented image');
 
 % Shape Based Feature Extraction part
 [row, column] = size(BWfinal);
+n1=10;
+eee=[]
 
 % num_motion is the total sum of the value of pixel
 % in the image. Since BWfinal is in binary. The sum
@@ -126,10 +128,10 @@ RowStart = max(1, rMean - min(rStd, ceil(row/2)));
 RowEnd = min(row, rMean + min(rStd, ceil(row/2)));
 
 % Draw the lines of the row and column
-line([ColumnStart, ColumnEnd], [RowStart, RowStart], 'Color','blue','Linewidth',2);
-line([ColumnStart, ColumnEnd], [RowEnd, RowEnd], 'Color','blue','Linewidth',2);
-line([ColumnStart, ColumnStart], [RowStart, RowEnd], 'Color','blue','Linewidth',2);
-line([ColumnEnd, ColumnEnd], [RowStart, RowEnd], 'Color','blue','Linewidth',2);
+%line([ColumnStart, ColumnEnd], [RowStart, RowStart], 'Color','blue','Linewidth',2);
+%line([ColumnStart, ColumnEnd], [RowEnd, RowEnd], 'Color','blue','Linewidth',2);
+%line([ColumnStart, ColumnStart], [RowStart, RowEnd], 'Color','blue','Linewidth',2);
+%line([ColumnEnd, ColumnEnd], [RowStart, RowEnd], 'Color','blue','Linewidth',2);
 %drawnow;
 
 % crop image
@@ -208,6 +210,207 @@ s27=[xc,v2];
 %plot(h1,yc,'r*','LineWidth',2,'MarkerSize', 10);
 %plot(xc,v1,'r*','LineWidth',2,'MarkerSize', 10);
 %plot(h2,yc,'r*','LineWidth',2,'MarkerSize', 10);
-%plot(xc,v2,'r*','LineWidth',2,'MarkerSize', 10);
+%plot(xc+100,yc,'r*','LineWidth',2,'MarkerSize', 10);
 
 A=0;B=0;C=0;D=0;
+
+
+% This will loop from 10 till 80 by 10.
+% get max value at each 10 degree point 10 - 80 degree
+for n=n1:n1:90-n1
+    for i=1:column*3
+   
+        belahan = round(i*(cos((n/180)*pi)));
+        titikbelahan=[xc+belahan,yc];
+        tegak=round(sqrt((i^2)-(belahan^2)));
+        titiksendeng=[xc+belahan,yc-tegak];
+        TEGAK = yc-tegak;
+        LINTANG = xc + belahan;
+        if TEGAK >= row
+            TEGAK=TEGAK; A=A+1;
+            break
+        elseif LINTANG>=column
+            LINTANG=LINTANG; B=B+1;
+            break
+        elseif LINTANG <= 0
+            LINTANG=LINTANG; C=C+1;
+            break
+        elseif TEGAK <= 0
+            TEGAK=TEGAK; D=D+1;
+            break
+        elseif Y(TEGAK,LINTANG)==1
+        else
+            break
+            
+        end
+    end
+    s1 = [LINTANG-1 TEGAK];
+    q1(bil,1)=s1(1,1);
+    q1(bil,2)=s1(1,2);
+    bil=1+bil;
+end
+
+% loop di atas diulang untuk angle yang lainnya
+% max value untuk angle 100 - 170
+bil=1;
+for n=90+n1:n1:180-n1
+    for i=1:column*2
+        belahan=round(i*(cos((n/180)*pi)));
+        titikbelahan=[xc+belahan,yc];
+        tegak=round(sqrt((i^2)-(belahan^2)));
+        titiksendeng=[xc+belahan,yc-tegak];
+        TEGAK = yc - tegak;
+        LINTANG = xc + belahan;
+        if TEGAK >= row
+            TEGAK=TEGAK;
+            break
+        elseif LINTANG>=column
+            LINTANG=LINTANG;
+            break
+        elseif LINTANG <= 0
+            LINTANG=LINTANG;
+            break
+        elseif TEGAK <=0
+            TEGAK=TEGAK;
+            break
+        elseif Y(TEGAK, LINTANG)==1
+        else
+            break
+        end
+    end
+    s2=[LINTANG+1 TEGAK];
+    q2(bil,1)=s2(1,1);
+    q2(bil,2)=s2(1,2);
+    bil=1+bil;
+end
+
+%ulang loop untuk angle 190 - 260
+%method lebih kurang sama macam 10 - 80
+bil=1;
+for n=180-n1:-n1:90+n1
+    for i=1:column*3
+        belahan=round(i*(cos((n/180)*pi)));
+        titikbelahan=[xc+belahan,yc];
+        tegak=round(sqrt((i^2)-(belahan^2)));
+        titiksendeng=[xc+belahan,yc+tegak];
+        TEGAK = yc+tegak;
+        LINTANG = xc + belahan;
+        if TEGAK >= row
+            TEGAK=TEGAK;
+            break
+        elseif LINTANG>=column
+            LINTANG=LINTANG;
+            break
+        elseif LINTANG <= 0
+            LINTANG=LINTANG;
+            break
+        elseif TEGAK <=0
+            TEGAK=TEGAK;
+            break
+        elseif Y(TEGAK,LINTANG)==1
+        else
+            break
+        end
+    end
+    s3=[LINTANG+1,TEGAK];
+    q3(bil,1)=s3(1,1);
+    q3(bil,2)=s3(1,2);
+    bil=1+bil;
+end
+
+% ulang loop untuk 10 angle akhir
+bil=1;
+for n=90-n1:-n1:n1
+    for i=1:column*3
+        belahan=round(i*(cos((n/180)*pi)));
+        titikbelahan=[xc+belahan,yc];
+        tegak=round(sqrt((i^2)-(belahan^2)));
+        titiksendeng=[xc+belahan,yc+tegak];
+        TEGAK = yc+tegak;
+        LINTANG = xc + belahan;
+        if TEGAK >= row
+            TEGAK=TEGAK;
+            break
+        elseif LINTANG>=column
+            LINTANG=LINTANG;
+            break
+        elseif LINTANG <= 0
+            LINTANG=LINTANG;
+            break
+        elseif TEGAK <=0
+            TEGAK=TEGAK;
+            break
+        elseif Y(TEGAK,LINTANG)==1
+        else
+            break
+
+        end
+    end
+    s4=[LINTANG-1 TEGAK];
+    q4(bil,1)=s4(1,1);
+    q4(bil,2)=s4(1,2);
+    bil=1+bil;
+end
+
+kkk=((90-n1)/n1);
+
+% calculate the distance form centroid for each
+% point starting from horizontal right counter
+% clockwise
+
+d0=round(sqrt((s0(1)-xc)^2+(s0(2)-yc)^2));
+for n=1:kkk
+    dq1(n)=round(sqrt((q1(n,1)-xc)^2+(q1(n,2)-yc)^2));
+end
+d9=round(sqrt((s9(1)-xc)^2+(s9(2)-yc)^2));
+for n=1:kkk
+    dq2(n)=round(sqrt((q2(n,1)-xc)^2+(q2(n,2)-yc)^2));
+end
+d18=round(sqrt((s18(1)-xc)^2+(s18(2)-yc)^2));
+for n=1:kkk
+    dq3(n)=round(sqrt((q3(n,1)-xc)^2+(q3(n,2)-yc)^2));
+end
+d27=round(sqrt((s27(1)-xc)^2+(s27(2)-yc)^2));
+for n=1:kkk
+    dq4(n)=round(sqrt((q4(n,1)-xc)^2+(q4(n,2)-yc)^2));
+end
+
+d0;a=dq1;d9;b=dq2;d18;c=dq3;d27;d=dq4;
+figure (2),imshow(Y)
+hold
+plot(Y1(1),Y1(2),'r+');plot(s0(1),s0(2),'r+');plot(s9(1),s9(2),'r+');
+plot(s18(1),s18(2),'r+');plot(s27(1),s27(2),'r+');
+axis equal
+for n=1:kkk
+    xx=[Y1(1),q1(n,1)];yy=[Y1(2),q1(n,2)];plot(xx,yy,'b-')
+    xx=[Y1(1),q2(n,1)];yy=[Y1(2),q2(n,2)];plot(xx,yy,'b-')
+    xx=[Y1(1),q3(n,1)];yy=[Y1(2),q3(n,2)];plot(xx,yy,'b-')
+    xx=[Y1(1),q4(n,1)];yy=[Y1(2),q4(n,2)];plot(xx,yy,'b-')
+end
+xx=[Y1(1),s0(1,1)];yy=[Y1(2),s0(1,2)];plot(xx,yy,'b-')
+xx=[Y1(1),s9(1,1)];yy=[Y1(2),s9(1,2)];plot(xx,yy,'b-')
+xx=[Y1(1),s18(1,1)];yy=[Y1(2),s18(1,2)];plot(xx,yy,'b-')
+xx=[Y1(1),s27(1,1)];yy=[Y1(2),s27(1,2)];plot(xx,yy,'b-')
+
+
+% f is the centroid
+f=[xc, yc]
+% g is the point at every 10 degree
+g = [s0 ; q1(1,:) ; q1(2,:) ; q1(3,:) ; q1(4,:) ; q1(5,:) ; q1(6,:) ; q1(7,:) ; q1(8,:) ;
+    s9 ; q2(1,:) ; q2(2,:) ; q2(3,:) ; q2(4,:) ; q2(5,:) ; q2(6,:) ; q2(7,:) ; q2(8,:) ;
+    s18 ; q3(1,:) ; q3(2,:) ; q3(3,:) ; q3(4,:) ; q3(5,:) ; q3(6,:) ; q3(7,:) ; q3(8,:) ;
+    s27 ;  q4(1,:) ; q4(2,:) ; q4(3,:) ; q4(4,:) ; q4(5,:) ; q4(6,:) ; q4(7,:) ; q4(8,:) ]
+% eee is the distance of all 36 point with centroid
+e=[d0 a d9 b d18 c d27 d];ee=e;eee=[eee;ee];
+
+for i=1:36
+    h(i,1) = f(1);
+    h(i,2) = f(2);
+    h(i,3) = g(i,1);
+    h(i,4) = g(i,2);
+    h(i,5) = e(1,i);
+end
+
+
+filename = 'E:\Parasite\Documents\py\MachineVision\circle.xlsx';
+xlswrite(filename,h,1,'A1');

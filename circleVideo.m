@@ -1,44 +1,41 @@
+vidIn = VideoReader('C:\Users\lab E211\Desktop\rectangle.mov');
+ eee=[];
+ hhh=[];
+for ii = 1:5:vidIn.NumberOfFrames;
+    pic = read(vidIn, ii);
+    images = rgb2gray(pic);
 
-% Read the input vedio and get only the first frame
-vidInput = VideoReader('C:\Users\lab E211\Desktop\circle.mov');
-images = read(vidInput, 1);
+    % Segmentation part
+    % Use the threshold to get better results for binary image
+    [~, threshold] = edge(images, 'sobel');
+    fudgeFactor = 1;
+    BWs = edge(images, 'sobel', threshold * fudgeFactor);
+    %figure(3), imshow(BWs);
 
-% Show it and change it to grayscale for segmentation method
-%figure(1), imshow(images);
-images = rgb2gray(images);
+    % Morphological technique
+    % Dilate it so that the part we don't want will connected to the side.
+    % Then we can eliminate it with imclearborder.
+    se90 = strel('line', 3, 90);
+    se0 = strel('line', 3, 0);
+    BWsdil = imdilate(BWs, [se90 se0]);
+    %figure, imshow(BWsdil), title('dilated');
 
-% Segmentation part
-% Use the threshold to get better results for binary image
-[~, threshold] = edge(images, 'sobel');
-fudgeFactor = 1;
-BWs = edge(images, 'sobel', threshold * fudgeFactor);
-%figure(3), imshow(BWs);
+    % Fill the hole to get the perfect circle
+    BWdfill = imfill(BWsdil, 'holes');
+    %figure, imshow(BWdfill), title('fill');
 
-% Morphological technique
-% Dilate it so that the part we don't want will connected to the side.
-% Then we can eliminate it with imclearborder.
-se90 = strel('line', 3, 90);
-se0 = strel('line', 3, 0);
-BWsdil = imdilate(BWs, [se90 se0]);
-%figure, imshow(BWsdil), title('dilated');
+    % Clear the connected object to the border of the frame
+    BWnobord = imclearborder(BWdfill, 4);
+    %figure, imshow(BWnobord), title('clear border');
 
-% Fill the hole to get the perfect circle
-BWdfill = imfill(BWsdil, 'holes');
-%figure, imshow(BWdfill), title('fill');
-
-% Clear the connected object to the border of the frame
-BWnobord = imclearborder(BWdfill, 4);
-%figure, imshow(BWnobord), title('clear border');
-
-% We erode it back to get back the actual size and remove some noise
-seD = strel('diamond', 1);
-BWfinal = imerode(BWnobord,seD);
-%figure, imshow(BWfinal), title('segmented image');
-
-% Shape Based Feature Extraction part
-[row, column] = size(BWfinal);
-n1=10;
-eee=[]
+    % We erode it back to get back the actual size and remove some noise
+    seD = strel('diamond', 1);
+    BWfinal = imerode(BWnobord,seD);
+    %imshow(BWfinal), title('segmented image');
+   
+    [row, column] = size(BWfinal);
+    n1=10;
+   
 
 % num_motion is the total sum of the value of pixel
 % in the image. Since BWfinal is in binary. The sum
@@ -139,8 +136,8 @@ Y=imcrop(BWfinal,[ColumnStart, RowStart,ColumnEnd-(ColumnStart),RowEnd-(RowStart
 [row,column] = size(Y);
 Y = double(Y);
 
-%figure, imshow(Y);
-
+%imshow(Y);
+    
 stats = regionprops(Y, 'basic');
 Y1=stats(1).Centroid;
 Y1=round(Y1);
@@ -376,22 +373,24 @@ for n=1:kkk
 end
 
 d0;a=dq1;d9;b=dq2;d18;c=dq3;d27;d=dq4;
-figure (2),imshow(Y)
+strNumOfString = num2str(ii);
+strFigure = 'figure '
+numOfFigure = sprintf('%s_%s',strFigure,strNumOfString);
+figure(1),imshow(Y),title(numOfFigure)
 hold
 plot(Y1(1),Y1(2),'r+');plot(s0(1),s0(2),'r+');plot(s9(1),s9(2),'r+');
 plot(s18(1),s18(2),'r+');plot(s27(1),s27(2),'r+');
 axis equal
 for n=1:kkk
-    xx=[Y1(1),q1(n,1)];yy=[Y1(2),q1(n,2)];plot(xx,yy,'b-')
-    xx=[Y1(1),q2(n,1)];yy=[Y1(2),q2(n,2)];plot(xx,yy,'b-')
-    xx=[Y1(1),q3(n,1)];yy=[Y1(2),q3(n,2)];plot(xx,yy,'b-')
-    xx=[Y1(1),q4(n,1)];yy=[Y1(2),q4(n,2)];plot(xx,yy,'b-')
+    xx=[Y1(1),q1(n,1)];yy=[Y1(2),q1(n,2)];plot(xx,yy,'b-');
+    xx=[Y1(1),q2(n,1)];yy=[Y1(2),q2(n,2)];plot(xx,yy,'b-');
+    xx=[Y1(1),q3(n,1)];yy=[Y1(2),q3(n,2)];plot(xx,yy,'b-');
+    xx=[Y1(1),q4(n,1)];yy=[Y1(2),q4(n,2)];plot(xx,yy,'b-');
 end
-xx=[Y1(1),s0(1,1)];yy=[Y1(2),s0(1,2)];plot(xx,yy,'b-')
-xx=[Y1(1),s9(1,1)];yy=[Y1(2),s9(1,2)];plot(xx,yy,'b-')
-xx=[Y1(1),s18(1,1)];yy=[Y1(2),s18(1,2)];plot(xx,yy,'b-')
-xx=[Y1(1),s27(1,1)];yy=[Y1(2),s27(1,2)];plot(xx,yy,'b-')
-
+xx=[Y1(1),s0(1,1)];yy=[Y1(2),s0(1,2)];plot(xx,yy,'b-');
+xx=[Y1(1),s9(1,1)];yy=[Y1(2),s9(1,2)];plot(xx,yy,'b-');
+xx=[Y1(1),s18(1,1)];yy=[Y1(2),s18(1,2)];plot(xx,yy,'b-');
+xx=[Y1(1),s27(1,1)];yy=[Y1(2),s27(1,2)];plot(xx,yy,'b-');
 
 % f is the centroid
 f=[xc, yc]
@@ -404,7 +403,7 @@ g = [s0 ; q1(1,:) ; q1(2,:) ; q1(3,:) ; q1(4,:) ; q1(5,:) ; q1(6,:) ; q1(7,:) ; 
 e=[d0 a d9 b d18 c d27 d];ee=e;eee=[eee;ee];
 
 for i=1:36
-    h(i,1) = 1;
+    h(i,1) = ii;
     h(i,2) = f(1);
     h(i,3) = f(2);
     h(i,4) = g(i,1);
@@ -412,7 +411,9 @@ for i=1:36
     h(i,6) = e(1,i);
 end
 
+hh=h;hhh=[hhh;hh];
 
+end
 
-%filename = 'E:\Parasite\Documents\py\MachineVision\circle.xlsx';
-%xlswrite(filename,h,1,'A1');
+filename = 'C:\Users\lab E211\Desktop\rectangle.xlsx';
+xlswrite(filename,hhh,1,'A2');
